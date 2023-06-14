@@ -13,7 +13,7 @@ def _is_game_won(guesses):
 
 
 def _ask_user_for_matches(guess_str):
-    print("Guess:", guess_str)
+    print("Guess:", guess_str, "\n")
 
     matches = []
     i = 0
@@ -26,6 +26,7 @@ def _ask_user_for_matches(guess_str):
             matches.append(Match(guess_str[i], i, index_matched=feedback == "g"))
         i += 1
 
+    print("")
     return matches
 
 

@@ -59,17 +59,50 @@ def _find_eligible_words(words, knowledge):
     return words_without_incorrect_index_matches
 
 
+def _print_reasoning(knowledge, occurrences, sorted_scores):
+    print("Reasoning:")
+    print("\tLetters not present (grey):", ", ".join(knowledge.non_matches))
+    print(
+        "\tLetters in known positions (green):",
+        " ".join([c if c else "_" for c in knowledge.known_structure]),
+    )
+
+    print("\tLetters present, but not in positions (yellow):")
+    incorrect_index_match_info = {
+        m.char: lmap(
+            lambda m2: str(m2.index + 1),
+            filter(lambda m2: m2.char == m.char, knowledge.incorrect_index_matches),
+        )
+        for m in knowledge.incorrect_index_matches
+    }
+    incorrect_index_match_strs = [
+        f"{char} not in positions: {', '.join(sorted(incorrect_index_match_info[char]))}"
+        for char in sorted(incorrect_index_match_info.keys())
+    ]
+    for s in incorrect_index_match_strs:
+        print(f"\t\t{s}")
+
+    print(
+        "\tLetter occurrences in eligible words:",
+        sorted(occurrences.items(), key=lambda kvp: kvp[1], reverse=True),
+    )
+    print("\tTop 5 guesses:", sorted_scores[:5])
+    print("")
+
+
 def next_guess(words, guesses):
     knowledge = _collate_knowledge(guesses)
     eligible_words = _find_eligible_words(words, knowledge)
-    if len(eligible_words) == 0:
+    chars = flatten(eligible_words)
+    occurrences = {char: len(lfilter(lambda c: c == char, chars)) for char in chars}
+    scores = {
+        word: sum([occurrences[char] for char in set(word)]) for word in eligible_words
+    }
+    sorted_scores = sorted(scores.items(), key=lambda kvp: kvp[1], reverse=True)
+
+    _print_reasoning(knowledge, occurrences, sorted_scores)
+
+    if len(sorted_scores) == 0:
         return None
     else:
-        chars = flatten(eligible_words)
-        occurrences = {char: len(lfilter(lambda c: c == char, chars)) for char in chars}
-        scores = {
-            word: sum([occurrences[char] for char in set(word)])
-            for word in eligible_words
-        }
-        sorted_scores = sorted(scores.items(), key=lambda kvp: kvp[1], reverse=True)
         return sorted_scores[0][0]
