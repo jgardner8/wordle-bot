@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-# from interactive_game import play  # Uncomment to play interactively
-from automatic_game import play  # Uncomment to collect performance stats
+# from automatic_game import play  # Uncomment to collect performance stats
+from interactive_game import play  # Uncomment to play interactively
 from words import read_words
 
 
