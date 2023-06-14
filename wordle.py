@@ -7,7 +7,7 @@ from list import find, flatMap, flatten, lfilter, lmap
 class Match:
     char: str
     index: int
-    index_matched: bool  # if true, index is correct index of char (green), otherwise it's known incorrect index (orange)
+    index_matched: bool  # if true, index is correct index of char (green), otherwise it's known incorrect index (yellow)
 
 
 @dataclass
@@ -39,11 +39,12 @@ def generate_known_structure(matches):
 
 def collate_knowledge(guesses):
     guessed_chars = flatMap(lambda g: g.word, guesses)
-    matches = flatMap(lambda g: g.matches, guesses)
+    matches = flatMap(lambda g: g.matches, guesses)  # TODO: remove duplicates
     non_matches = lfilter(
         lambda c: c not in lmap(lambda m: m.char, matches), guessed_chars
     )
 
+    # TODO: should ignore where there's already an index match
     incorrect_index_matches = lfilter(lambda m: not m.index_matched, matches)
 
     index_matches = lfilter(lambda m: m.index_matched, matches)
@@ -64,14 +65,15 @@ def find_eligible_words(words, knowledge):
         ),
         words_without_non_matches,
     )
-    # Orange boxes
-    words_with_incorrect_index_matches = lfilter(
+    # Yellow boxes
+    # TODO: this just finds words that don't have the letter at the position. We also need to contain this letter somewhere
+    words_without_incorrect_index_matches = lfilter(
         lambda w: all(
             [w[m.index] != m.char for m in knowledge.incorrect_index_matches]
         ),
         words_with_index_matches,
     )
-    return words_with_incorrect_index_matches
+    return words_without_incorrect_index_matches
 
 
 def next_guess(eligible_words):
@@ -86,10 +88,46 @@ def next_guess(eligible_words):
 
 def main():
     words = get_words()
-    guesses = [Guess("louse", [Match("e", 4, True)])]
+    guesses = [
+        Guess("louse", [Match("e", 4, True)]),
+        Guess(
+            "irate", [Match("i", 0, False), Match("r", 1, True), Match("e", 4, True)]
+        ),
+        Guess(
+            "price",
+            [
+                Match("r", 1, True),
+                Match("i", 2, True),
+                Match("c", 3, False),
+                Match("e", 4, True),
+            ],
+        ),
+        Guess(
+            "bride",
+            [
+                Match("r", 1, True),
+                Match("i", 2, True),
+                Match("e", 4, True),
+            ],
+        ),
+        Guess(
+            "crime",
+            [
+                Match("c", 0, True),
+                Match("r", 1, True),
+                Match("i", 2, True),
+                Match("m", 3, True),
+                Match("e", 4, True),
+            ],
+        ),
+    ]
     knowledge = collate_knowledge(guesses)
     eligible_words = find_eligible_words(words, knowledge)
-    print(next_guess(eligible_words))
+    guess = next_guess(eligible_words)
+    if guess == guesses[len(guesses) - 1].word:
+        print("Winner winner, chicken dinner!")
+    else:
+        print(guess)
 
 
 if __name__ == "__main__":
