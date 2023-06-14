@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import List
-from list import find, flatMap, lfilter, lmap
+from list import find, flatMap, flatten, lfilter, lmap
 
 
 @dataclass
@@ -75,7 +75,13 @@ def find_eligible_words(words, knowledge):
 
 
 def next_guess(eligible_words):
-    return eligible_words[0]
+    chars = flatten(eligible_words)
+    occurrences = {char: len(lfilter(lambda c: c == char, chars)) for char in chars}
+    scores = {
+        word: sum([occurrences[char] for char in set(word)]) for word in eligible_words
+    }
+    sorted_scores = sorted(scores.items(), key=lambda kvp: kvp[1], reverse=True)
+    return sorted_scores[0][0]
 
 
 def main():
@@ -83,7 +89,7 @@ def main():
     guesses = [Guess("louse", [Match("e", 4, True)])]
     knowledge = collate_knowledge(guesses)
     eligible_words = find_eligible_words(words, knowledge)
-    print(eligible_words)
+    print(next_guess(eligible_words))
 
 
 if __name__ == "__main__":
