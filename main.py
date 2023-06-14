@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
 
-# from automatic_game import play  # Uncomment to collect performance stats
-from interactive_game import play  # Uncomment to play interactively
+import automatic_game
+import interactive_game
+import sys
 from words import read_words
 
 
-def main():
+def main(args):
+    if len(args) <= 1 or args[1] not in ("interactive", "automatic"):
+        print("Usage: ./main.py (interactive|automatic)")
+        return
+
     words = read_words("five_letter_words.txt")
-    play(words)
+
+    if args[1] == "interactive":
+        interactive_game.play(words)
+    else:
+        automatic_game.play(words)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
