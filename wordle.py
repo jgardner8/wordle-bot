@@ -90,19 +90,10 @@ def next_guess(eligible_words):
 def main():
     words = get_words()
     guesses = [
-        Guess("louse", [Match("e", 4, True)]),
-        Guess(
-            "irate", [Match("i", 0, False), Match("r", 1, True), Match("e", 4, True)]
-        ),
-        Guess(
-            "price",
-            [
-                Match("r", 1, True),
-                Match("i", 2, True),
-                Match("c", 3, False),
-                Match("e", 4, True),
-            ],
-        ),
+        Guess("alert", [Match("e", 2, False), Match("r", 3, False)]),
+        Guess("poser", [Match("e", 3, False), Match("r", 4, False)]),
+        Guess("drive", [Match("r", 1, True), Match("i", 2, True), Match("e", 4, True)]),
+        Guess("brine", [Match("r", 1, True), Match("i", 2, True), Match("e", 4, True)]),
         Guess(
             "crime",
             [
@@ -116,10 +107,12 @@ def main():
     ]
     knowledge = collate_knowledge(guesses)
     eligible_words = find_eligible_words(words, knowledge)
-    guess = next_guess(eligible_words)
-    if guess == guesses[len(guesses) - 1].word:
+    if len(eligible_words) == 1:
         print("Winner winner, chicken dinner!")
+    elif len(eligible_words) == 0:
+        print("Oops, the word is not in dictionary.txt :(")
     else:
+        guess = next_guess(eligible_words)
         print(guess)
 
 
