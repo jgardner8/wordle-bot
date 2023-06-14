@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from game import game_loop
 from words import get_words
 
