@@ -90,7 +90,7 @@ def _print_reasoning(knowledge, occurrences, sorted_scores):
     print("")
 
 
-def next_guess(words, guesses, silent_mode=True):
+def next_guess(words, guesses, silent_mode):
     if len(guesses) == 0:
         return "alert"  # optimisation: this is what it would calculate every time with no knowledge
 

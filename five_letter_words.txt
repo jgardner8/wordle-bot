@@ -15,7 +15,7 @@ brine
 guano
 snafu
 
-# Words from URL above that purports to be an official dictionary
+# Words from URL above
 aback
 abase
 abate

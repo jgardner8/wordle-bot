@@ -68,7 +68,7 @@ def play(words):
 
         guess_str = ai_player.next_guess(words, guesses, silent_mode=False)
         if guess_str == None:
-            print("Oops, the word is not in words.txt :(")
+            print("Oops, the word is not in five_letter_words.txt :(")
             _print_guess_grid(guesses)
             break
         else:

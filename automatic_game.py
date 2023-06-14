@@ -2,7 +2,7 @@ import ai_player
 import statistics
 from game import Guess, Match
 from list import find, lfilter, lmap
-from words import get_words
+from words import read_words
 
 
 def _calculate_matches(word_to_guess, guess_str):
@@ -19,11 +19,11 @@ def _calculate_matches(word_to_guess, guess_str):
 def play_game(words, word_to_guess):
     guesses = []
     for turn_number in range(1, 100):
-        guess_str = ai_player.next_guess(words, guesses)
+        guess_str = ai_player.next_guess(words, guesses, silent_mode=True)
         if guess_str == word_to_guess:
             return turn_number
         elif guess_str == None:
-            raise AssertionError(f"{word_to_guess} is not in words.txt")
+            raise AssertionError(f"{word_to_guess} is not in five_letter_words.txt")
         else:
             matches = _calculate_matches(word_to_guess, guess_str)
             guesses.append(Guess(guess_str, matches))
@@ -32,7 +32,7 @@ def play_game(words, word_to_guess):
 
 
 def play(words):
-    past_answers = get_words("past_answers.txt")
+    past_answers = read_words("past_answers.txt")
 
     stats = []
     for word_to_guess in past_answers:
