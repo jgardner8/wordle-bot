@@ -66,10 +66,12 @@ def find_eligible_words(words, knowledge):
         words_without_non_matches,
     )
     # Yellow boxes
-    # TODO: this just finds words that don't have the letter at the position. We also need to contain this letter somewhere
     words_without_incorrect_index_matches = lfilter(
         lambda w: all(
-            [w[m.index] != m.char for m in knowledge.incorrect_index_matches]
+            [
+                w[m.index] != m.char and m.char in w
+                for m in knowledge.incorrect_index_matches
+            ]
         ),
         words_with_index_matches,
     )
@@ -99,14 +101,6 @@ def main():
                 Match("r", 1, True),
                 Match("i", 2, True),
                 Match("c", 3, False),
-                Match("e", 4, True),
-            ],
-        ),
-        Guess(
-            "bride",
-            [
-                Match("r", 1, True),
-                Match("i", 2, True),
                 Match("e", 4, True),
             ],
         ),
