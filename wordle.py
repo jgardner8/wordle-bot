@@ -3,20 +3,20 @@ from typing import List
 from list import find, flatMap, flatten, lfilter, lmap
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class Match:
     char: str
     index: int
     index_matched: bool  # if true, index is correct index of char (green), otherwise it's known incorrect index (yellow)
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class Guess:
     word: str
     matches: List[Match]
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class Knowledge:
     non_matches: str
     incorrect_index_matches: List[Match]
@@ -39,12 +39,11 @@ def generate_known_structure(matches):
 
 def collate_knowledge(guesses):
     guessed_chars = flatMap(lambda g: g.word, guesses)
-    matches = flatMap(lambda g: g.matches, guesses)  # TODO: remove duplicates
+    matches = set(flatMap(lambda g: g.matches, guesses))
     non_matches = lfilter(
         lambda c: c not in lmap(lambda m: m.char, matches), guessed_chars
     )
 
-    # TODO: should ignore where there's already an index match
     incorrect_index_matches = lfilter(lambda m: not m.index_matched, matches)
 
     index_matches = lfilter(lambda m: m.index_matched, matches)
