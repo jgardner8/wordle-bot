@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import List
-from game_data import Match
+from game import Match
 from list import find, flatMap, flatten, lfilter, lmap
 
 
@@ -90,7 +90,10 @@ def _print_reasoning(knowledge, occurrences, sorted_scores):
     print("")
 
 
-def next_guess(words, guesses):
+def next_guess(words, guesses, silent_mode=True):
+    if len(guesses) == 0:
+        return "alert"  # optimisation: this is what it would calculate every time with no knowledge
+
     knowledge = _collate_knowledge(guesses)
     eligible_words = _find_eligible_words(words, knowledge)
     chars = flatten(eligible_words)
@@ -100,7 +103,8 @@ def next_guess(words, guesses):
     }
     sorted_scores = sorted(scores.items(), key=lambda kvp: kvp[1], reverse=True)
 
-    _print_reasoning(knowledge, occurrences, sorted_scores)
+    if not silent_mode:
+        _print_reasoning(knowledge, occurrences, sorted_scores)
 
     if len(sorted_scores) == 0:
         return None

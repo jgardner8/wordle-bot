@@ -3,7 +3,19 @@
 #   lis = uls.flatMap(ul => Array.from(ul.getElementsByTagName("li")))
 #   words = lis.map(li => (li.getElementsByTagName("a")[0] || {}).innerHTML)
 #   words.join(" ")
-# I then removed the garbage off the end and replaced \s with \n
+#
+# I then:
+#   * removed the garbage HTML off the end
+#   * replaced \s with \n
+#   * added any words missed from past_answers.txt (which shows this file is no good...)
+
+# Words from past_answers.txt that were missing
+balsa
+brine
+guano
+snafu
+
+# Words from URL above that purports to be an official dictionary
 aback
 abase
 abate
