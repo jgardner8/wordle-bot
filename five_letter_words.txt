@@ -15,6 +15,9 @@ brine
 guano
 snafu
 
+# Words played since bot was made that were missing
+kazoo
+
 # Words from URL above
 aback
 abase
