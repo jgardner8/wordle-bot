@@ -12,6 +12,23 @@ def _is_game_won(guesses):
     )
 
 
+def _ask_user_for_guess():
+    print("Enter guess: ", end="")
+    guess_str = input()
+    return guess_str
+
+
+def _make_guess(words, guesses):
+    print("Suggest guess? (y/n) ", end="")
+    suggest_guess_str = input()
+    if suggest_guess_str == "y":
+        return ai_player.next_guess(words, guesses, silent_mode=False)
+    elif suggest_guess_str == "n":
+        return _ask_user_for_guess()
+    else:
+        return _make_guess(words, guesses)
+
+
 def _ask_user_for_matches(guess_str):
     print("Guess:", guess_str, "\n")
 
@@ -66,7 +83,7 @@ def play(words):
         print("Turn", turn_number)
         print("------------")
 
-        guess_str = ai_player.next_guess(words, guesses, silent_mode=False)
+        guess_str = _make_guess(words, guesses)
         if guess_str == None:
             print("Oops, the word is not in five_letter_words.txt :(")
             _print_guess_grid(guesses)
